@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - Truyện Hay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6a5acd;
+            --secondary-color: #9370db;
+            --dark-color: #4b0082;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .payment-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .payment-header p {
+            color: #666;
+        }
+        
+        .payment-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .payment-methods, .order-summary {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(106, 90, 205, 0.05);
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(106, 90, 205, 0.1);
+        }
+        
+        .payment-option input {
+            margin-right: 15px;
+        }
+        
+        .payment-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: var(--primary-color);
+        }
+        
+        .payment-details {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+border-radius: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .card-details {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .card-details .form-group {
+            flex: 1;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .promo-code {
+            display: flex;
+            margin-top: 20px;
+        }
+        
+        .promo-code input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+        }
+        
+        .promo-code button {
+            padding: 10px 15px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .promo-code button:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .secure-payment {
+            display: flex;
+            align-items: center;
+margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .secure-payment i {
+            color: var(--success-color);
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .payment-container {
+                flex-direction: column;
+            }
+            
+            .card-details {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="payment-header">
+            <h1><i class="fas fa-book-open"></i> Thanh Toán Truyện Hay</h1>
+            <p>Hoàn tất thanh toán để tiếp tục đọc truyện không giới hạn</p>
+        </header>
+        
+        <div class="payment-container">
+            <section class="payment-methods">
+                <h2 class="section-title">Phương thức thanh toán</h2>
+                
+                <div class="payment-option selected" id="credit-card-option">
+                    <input type="radio" name="payment-method" id="credit-card" checked>
+                    <i class="fas fa-credit-card payment-icon"></i>
+                    <div>
+                        <label for="credit-card">Thẻ tín dụng/Thẻ ghi nợ</label>
+                        <p>Visa, Mastercard, JCB, American Express</p>
+                    </div>
+                </div>
+                
+                <div class="payment-details" id="credit-card-details">
+                    <div class="form-group">
+                        <label for="card-number">Số thẻ</label>
+                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="card-name">Tên trên thẻ</label>
+                        <input type="text" id="card-name" class="form-control" placeholder="NGUYEN VAN A">
+                    </div>
+                    
+                    <div class="card-details">
+                        <div class="form-group">
+                            <label for="card-expiry">Ngày hết hạn</label>
+                            <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-cvv">Mã CVV</label>
+                            <input type="text" id="card-cvv" class="form-control" placeholder="123">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-option" id="momo-option">
+                    <input type="radio" name="payment-method" id="momo">
+                    <i class="fas fa-mobile-alt payment-icon"></i>
+<div>
+                        <label for="momo">Ví điện tử MoMo</label>
+                        <p>Thanh toán nhanh chóng qua ứng dụng MoMo</p>
+                    </div>
+                </div>
+                
+                <div class="payment-details" id="momo-details">
+                    <p>Quét mã QR bên dưới để thanh toán qua MoMo</p>
+                    <div style="background: #fff; padding: 15px; text-align: center; margin: 15px 0; border-radius: 8px;">
+                        <img src="https://via.placeholder.com/200x200?text=MoMo+QR+Code" alt="MoMo QR Code" style="max-width: 200px;">
+                    </div>
+                    <p>Hoặc nhập số điện thoại đã đăng ký MoMo</p>
+                    <div class="form-group">
+                        <input type="tel" id="momo-phone" class="form-control" placeholder="0912 345 678">
+                    </div>
+                </div>
+                
+                <div class="payment-option" id="zalopay-option">
+                    <input type="radio" name="payment-method" id="zalopay">
+                    <i class="fas fa-wallet payment-icon"></i>
+                    <div>
+                        <label for="zalopay">Ví ZaloPay</label>
+                        <p>Thanh toán qua ứng dụng ZaloPay</p>
+                    </div>
+                </div>
+                
+                <div class="payment-details" id="zalopay-details">
+                    <p>Mở ứng dụng ZaloPay và quét mã QR bên dưới</p>
+                    <div style="background: #fff; padding: 15px; text-align: center; margin: 15px 0; border-radius: 8px;">
+                        <img src="https://via.placeholder.com/200x200?text=ZaloPay+QR+Code" alt="ZaloPay QR Code" style="max-width: 200px;">
+                    </div>
+                </div>
+                
+                <div class="secure-payment">
+                    <i class="fas fa-lock"></i>
+                    <span>Giao dịch được bảo mật và mã hóa</span>
+                </div>
+            </section>
+            
+            <section class="order-summary">
+                <h2 class="section-title">Thông tin đơn hàng</h2>
+                
+                <div class="order-item">
+                    <span>Gói cao cấp 1 tháng</span>
+                    <span>99.000đ</span>
+                </div>
+                
+                <div class="order-item">
+                    <span>Giảm giá thành viên</span>
+                    <span>-10.000đ</span>
+                </div>
+                
+                <div class="promo-code">
+                    <input type="text" placeholder="Mã giảm giá">
+                    <button type="button">Áp dụng</button>
+                </div>
+                
+                <div class="order-total">
+                    <span>Tổng cộng</span>
+                    <span>89.000đ</span>
+                </div>
+<button type="button" class="btn" id="pay-button">
+                    <i class="fas fa-lock"></i> Thanh toán ngay
+                </button>
+                
+                <div style="margin-top: 20px; font-size: 14px; color: #666;">
+                    <p>Bằng cách nhấn vào nút "Thanh toán ngay", bạn đồng ý với <a href="#" style="color: var(--primary-color);">Điều khoản dịch vụ</a> và <a href="#" style="color: var(--primary-color);">Chính sách bảo mật</a> của chúng tôi.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hiển thị chi tiết phương thức thanh toán được chọn
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            const paymentDetails = document.querySelectorAll('.payment-details');
+            
+            // Mặc định hiển thị thẻ tín dụng
+            document.getElementById('credit-card-details').style.display = 'block';
+            
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Bỏ chọn tất cả
+                    paymentOptions.forEach(opt => opt.classList.remove('selected'));
+                    paymentDetails.forEach(detail => detail.style.display = 'none');
+                    
+                    // Chọn option hiện tại
+                    this.classList.add('selected');
+                    const radio = this.querySelector('input');
+                    radio.checked = true;
+                    
+                    // Hiển thị chi tiết tương ứng
+                    const method = this.id.split('-')[0];
+                    document.getElementById(`${method}-details`).style.display = 'block';
+                });
+            });
+            
+            // Xử lý nút thanh toán
+            document.getElementById('pay-button').addEventListener('click', function() {
+                const selectedMethod = document.querySelector('input[name="payment-method"]:checked').id;
+                
+                // Validate form
+                let isValid = true;
+                
+                if (selectedMethod === 'credit-card') {
+                    const cardNumber = document.getElementById('card-number').value;
+                    const cardName = document.getElementById('card-name').value;
+                    const cardExpiry = document.getElementById('card-expiry').value;
+                    const cardCvv = document.getElementById('card-cvv').value;
+                    
+                    if (!cardNumber || !cardName || !cardExpiry || !cardCvv) {
+                        isValid = false;
+                        alert('Vui lòng điền đầy đủ thông tin thẻ');
+                    }
+                } else if (selectedMethod === 'momo') {
+const momoPhone = document.getElementById('momo-phone').value;
+                    if (!momoPhone) {
+                        isValid = false;
+                        alert('Vui lòng nhập số điện thoại MoMo');
+                    }
+                }
+                
+                if (isValid) {
+                    // Hiển thị thông báo thanh toán thành công
+                    alert('Thanh toán thành công! Cảm ơn bạn đã sử dụng dịch vụ.');
+                    // Có thể chuyển hướng đến trang cảm ơn hoặc trang truyện ở đây
+                    // window.location.href = 'thank-you.html';
+                }
+            });
+            
+            // Định dạng số thẻ khi nhập
+            document.getElementById('card-number').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s+/g, '');
+                if (value.length > 0) {
+                    value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+                }
+                e.target.value = value;
+            });
+            
+            // Định dạng ngày hết hạn
+            document.getElementById('card-expiry').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+        });
+    </script>
+</body>
+</html>

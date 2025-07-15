@@ -1,26 +1,25 @@
--- Bảng Người dùng
+-- 1. Bảng Người Dùng
 CREATE TABLE NguoiDung (
-    MaNguoiDung INT PRIMARY KEY,
-    Ten VARCHAR(100),
-    Email VARCHAR(100),
-    MatKhau VARCHAR(100)
+    MaNguoiDung INT PRIMARY KEY AUTO_INCREMENT,
+    Ten NVARCHAR(100),
+    Email NVARCHAR(100),
+    MatKhau NVARCHAR(100)
 );
 
--- Bảng Truyện
+-- 2. Bảng Truyện
 CREATE TABLE Truyen (
-    MaTruyen INT PRIMARY KEY,
-    TuaDe VARCHAR(255),
-    MoTa TEXT,
-    TheLoai VARCHAR(100),
-    MaTacGia INT,
-    AnhBia VARCHAR(255),
+    MaTruyen INT PRIMARY KEY AUTO_INCREMENT,
     NgayTao DATE,
-    FOREIGN KEY (MaTacGia) REFERENCES NguoiDung(MaNguoiDung)
+    TuaDe NVARCHAR(200),
+    MoTa TEXT,
+    TheLoai NVARCHAR(100),
+    MaTacGia NVARCHAR(100),
+    AnhBia NVARCHAR(255)
 );
 
--- Bảng Truyện chương
+-- 3. Bảng Truyện - Chương
 CREATE TABLE TruyenChuong (
-    MaChuong INT PRIMARY KEY,
+    MaChuong INT PRIMARY KEY AUTO_INCREMENT,
     MaTruyen INT,
     ThuTuChuong INT,
     NgayTao DATE,
@@ -28,59 +27,56 @@ CREATE TABLE TruyenChuong (
     FOREIGN KEY (MaTruyen) REFERENCES Truyen(MaTruyen)
 );
 
--- Bảng Đánh giá
-CREATE TABLE DanhGia (
-    MaDanhGia INT PRIMARY KEY,
+-- 4. Bảng Lịch Sử Đọc Truyện
+CREATE TABLE LichSuDocTruyen (
+    MaLichSu INT PRIMARY KEY AUTO_INCREMENT,
     MaNguoiDung INT,
-    MaTruyen INT,
-    SoSao INT,
-    NgayDanhGia DATE,
+    MaChuong INT,
+    ThoiGianDocLanCuoi DATETIME,
+    TrangThaiDaDoc BOOLEAN,
     FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung),
-    FOREIGN KEY (MaTruyen) REFERENCES Truyen(MaTruyen)
+    FOREIGN KEY (MaChuong) REFERENCES TruyenChuong(MaChuong)
 );
 
--- Bảng Bình luận
+-- 5. Bảng Đánh Giá
+CREATE TABLE DanhGia (
+    MaDanhGia INT PRIMARY KEY AUTO_INCREMENT,
+    MaTruyen INT,
+    MaNguoiDung INT,
+    SoSao INT CHECK (SoSao BETWEEN 1 AND 5),
+    NgayDanhGia DATE,
+    FOREIGN KEY (MaTruyen) REFERENCES Truyen(MaTruyen),
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
+);
+
+-- 6. Bảng Bình Luận
 CREATE TABLE BinhLuan (
-    MaBinhLuan INT PRIMARY KEY,
+    MaBinhLuan INT PRIMARY KEY AUTO_INCREMENT,
     MaNguoiDung INT,
     MaChuong INT,
     MaTruyen INT,
     NoiDungBinhLuan TEXT,
-    NgayBinhLuan DATE,
-    TenNguoiDung VARCHAR(100),
+    NgayBinhLuan DATETIME,
+    TenNguoiDung NVARCHAR(100),
     FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung),
     FOREIGN KEY (MaChuong) REFERENCES TruyenChuong(MaChuong),
     FOREIGN KEY (MaTruyen) REFERENCES Truyen(MaTruyen)
 );
 
--- Bảng Thanh toán
+-- 7. Bảng Thanh Toán
 CREATE TABLE ThanhToan (
-    MaThanhToan INT PRIMARY KEY,
+    MaThanhToan INT PRIMARY KEY AUTO_INCREMENT,
     MaNguoiDung INT,
-    SoTien DECIMAL(10,2),
-    PhuongThucThanhToan VARCHAR(100),
-    ThoiGianThanhToan DATE,
+    PhuongThucThanhToan NVARCHAR(100),
+    ThoiGianThanhToan DATETIME,
     FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung)
 );
 
--- Bảng Tìm kiếm
+-- 8. Bảng Tìm Kiếm
 CREATE TABLE TimKiem (
-    MaTimKiem INT PRIMARY KEY,
+    MaTimKiem INT PRIMARY KEY AUTO_INCREMENT,
     MaTruyen INT,
-    TuKhoa VARCHAR(255),
-    NgayTimKiem DATE,
+    TuKhoa NVARCHAR(100),
+    NgayTimKiem DATETIME,
     FOREIGN KEY (MaTruyen) REFERENCES Truyen(MaTruyen)
-);
-
--- Bảng Lịch sử đọc truyện
-CREATE TABLE LichSuDocTruyen (
-    MaNguoiDung INT,
-    MaTruyen INT,
-    MaChuong INT,
-    ThoiGianDocLanCuoi DATE,
-    TrangThaiDaDoc VARCHAR(20),
-    PRIMARY KEY (MaNguoiDung, MaTruyen, MaChuong),
-    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung),
-    FOREIGN KEY (MaTruyen) REFERENCES Truyen(MaTruyen),
-    FOREIGN KEY (MaChuong) REFERENCES TruyenChuong(MaChuong)
 );

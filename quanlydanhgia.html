@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruyệnHay.vn - Quản lý đánh giá</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: #34495e;
+        }
+        
+        .sidebar-menu li.active {
+            background-color: #3498db;
+            font-weight: bold;
+        }
+        
+        .submenu {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .submenu li {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .sidebar-menu li.active .submenu {
+            display: block;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .content-header h2 {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            color: #7f8c8d;
+            cursor: pointer;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .filter-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .filter-item {
+            flex: 1;
+            position: relative;
+        }
+        
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .filter-item input, .filter-item select {
+            width: 100%;
+            padding: 8px 10px 8px 35px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 32px;
+            color: #7f8c8d;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: opacity 0.3s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-view {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-approve {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .status-pending {
+            color: #e67e22;
+            font-weight: 500;
+        }
+        
+        .status-approved {
+            color: #2ecc71;
+            font-weight: 500;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Dropdown menu */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 200px;
+            z-index: 100;
+            display: none;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>TruyệnHay.vn</h1>
+            </div>
+            <ul class="sidebar-menu">
+                <li>Quản lý tài khoản</li>
+                <li>Quản lý truyện</li>
+                <li>Quản lý bình luận</li>
+                <li class="active">Quản lý đánh giá
+                    <ul class="submenu">
+                        <li>Quản lý bình luận</li>
+                        <li>Tìm kiếm đánh giá</li>
+                        <li>Tất cả trạng thái</li>
+                    </ul>
+                </li>
+                <li>Thống kê báo cáo</li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="content-header">
+                    <h2>Quản lý đánh giá</h2>
+                </div>
+                
+                <div class="user-section">
+                    <div class="notification-icon" id="notificationIcon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-info dropdown">
+                        <div class="user-avatar" id="userAvatar">AD</div>
+                        <span>Admin</span>
+                        <div class="dropdown-menu" id="userDropdown">
+                            <div class="dropdown-item"><i class="fas fa-user-circle"></i> Thông tin tài khoản</div>
+                            <div class="dropdown-item"><i class="fas fa-cog"></i> Cài đặt</div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="search">Tìm kiếm đánh giá</label>
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search" placeholder="Nhập từ khóa...">
+                    </div>
+                    <div class="filter-item">
+                        <label for="status">Trạng thái</label>
+                        <select id="status">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="pending">Chờ duyệt</option>
+                            <option value="approved">Đã duyệt</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="reviewsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Người dùng</th>
+                            <th>Nội dung</th>
+                            <th>Điểm số</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-id="1">
+                            <td>1</td>
+                            <td>troll123</td>
+                            <td>bình luận hay và hữu ích</td>
+                            <td>5/5</td>
+                            <td class="status-pending">Chờ duyệt</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-approve">Duyệt</button>
+                                <button class="btn btn-view">Xem</button>
+                                <button class="btn btn-delete">Xóa</button>
+                            </td>
+                        </tr>
+                        <tr data-id="2">
+                            <td>2</td>
+                            <td>user123</td>
+                            <td>Truyện hay quá</td>
+                            <td>3.5/5</td>
+                            <td class="status-approved">Đã duyệt</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-view">Xem</button>
+                                <button class="btn btn-delete">Xóa</button>
+                            </td>
+                        </tr>
+                        <tr data-id="3">
+                            <td>3</td>
+                            <td>author01</td>
+                            <td>Cốt truyền đầy sáng tạo, mang đậm chất giải đố</td>
+                            <td>4.7/5</td>
+                            <td class="status-approved">Đã duyệt</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-view">Xem</button>
+                                <button class="btn btn-delete">Xóa</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for viewing review -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Chi tiết đánh giá</div>
+                <div class="close-modal">&times;</div>
+            </div>
+            <div class="modal-body" id="reviewDetails">
+                <!-- Content will be filled by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-view" id="closeViewModal">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for confirmation -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Xác nhận</div>
+                <div class="close-modal">&times;</div>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+                Bạn có chắc chắn muốn xóa đánh giá này?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-delete" id="confirmDelete">Xóa</button>
+                <button class="btn btn-view" id="cancelDelete">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const userAvatar = document.getElementById('userAvatar');
+            const userDropdown = document.getElementById('userDropdown');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const searchInput = document.getElementById('search');
+            const statusSelect = document.getElementById('status');
+            const reviewsTable = document.getElementById('reviewsTable');
+            const viewModal = document.getElementById('viewModal');
+            const confirmModal = document.getElementById('confirmModal');
+            const closeViewModal = document.getElementById('closeViewModal');
+            const closeConfirmModal = document.querySelector('#confirmModal .close-modal');
+            const cancelDelete = document.getElementById('cancelDelete');
+            const confirmDelete = document.getElementById('confirmDelete');
+            
+            // Current review to be deleted
+            let currentReviewToDelete = null;
+            
+            // Toggle user dropdown
+            userAvatar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+            
+            // Notification icon click
+            notificationIcon.addEventListener('click', function() {
+                alert('Bạn có 3 thông báo mới!');
+                // In a real app, you would show a notification panel
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterReviews();
+            });
+            
+            // Status filter
+            statusSelect.addEventListener('change', function() {
+                filterReviews();
+            });
+            
+            // Filter reviews based on search and status
+            function filterReviews() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const statusFilter = statusSelect.value;
+                
+                const rows = reviewsTable.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    const user = row.cells[1].textContent.toLowerCase();
+                    const content = row.cells[2].textContent.toLowerCase();
+                    const status = row.cells[4].textContent;
+                    
+                    const matchesSearch = user.includes(searchTerm) || content.includes(searchTerm);
+                    let matchesStatus = true;
+                    
+                    if (statusFilter === 'pending') {
+                        matchesStatus = status.includes('Chờ duyệt');
+                    } else if (statusFilter === 'approved') {
+                        matchesStatus = status.includes('Đã duyệt');
+                    }
+                    
+                    if (matchesSearch && matchesStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Handle action buttons in table
+            reviewsTable.addEventListener('click', function(e) {
+                const target = e.target;
+                const row = target.closest('tr');
+                
+                if (!row) return;
+                
+                const reviewId = row.getAttribute('data-id');
+                
+                // Approve button
+                if (target.classList.contains('btn-approve')) {
+                    const statusCell = row.cells[4];
+                    statusCell.textContent = 'Đã duyệt';
+                    statusCell.className = 'status-approved';
+                    
+                    // Remove approve button
+                    const approveBtn = row.querySelector('.btn-approve');
+                    if (approveBtn) {
+                        approveBtn.remove();
+                    }
+                    
+                    alert(`Đã duyệt đánh giá ID ${reviewId}`);
+                }
+                
+                // View button
+                if (target.classList.contains('btn-view')) {
+                    showReviewDetails(row);
+                }
+                
+                // Delete button
+                if (target.classList.contains('btn-delete')) {
+                    currentReviewToDelete = row;
+                    showConfirmModal(reviewId);
+                }
+            });
+            
+            // Show review details in modal
+            function showReviewDetails(row) {
+                const reviewId = row.cells[0].textContent;
+                const user = row.cells[1].textContent;
+                const content = row.cells[2].textContent;
+                const rating = row.cells[3].textContent;
+                const status = row.cells[4].textContent;
+                
+                const detailsHtml = `
+                    <p><strong>ID:</strong> ${reviewId}</p>
+                    <p><strong>Người dùng:</strong> ${user}</p>
+                    <p><strong>Điểm số:</strong> ${rating}</p>
+                    <p><strong>Trạng thái:</strong> ${status}</p>
+                    <p><strong>Nội dung:</strong></p>
+                    <p>${content}</p>
+                `;
+                
+                document.getElementById('reviewDetails').innerHTML = detailsHtml;
+                viewModal.style.display = 'flex';
+            }
+            
+            // Show confirmation modal for delete
+            function showConfirmModal(reviewId) {
+                document.getElementById('confirmMessage').textContent = 
+                    `Bạn có chắc chắn muốn xóa đánh giá ID ${reviewId}?`;
+                confirmModal.style.display = 'flex';
+            }
+            
+            // Close modals
+            function closeModals() {
+                viewModal.style.display = 'none';
+                confirmModal.style.display = 'none';
+            }
+            
+            // Event listeners for modals
+            closeViewModal.addEventListener('click', closeModals);
+            document.querySelector('#viewModal .close-modal').addEventListener('click', closeModals);
+            cancelDelete.addEventListener('click', closeModals);
+            closeConfirmModal.addEventListener('click', closeModals);
+            
+            // Confirm delete
+            confirmDelete.addEventListener('click', function() {
+                if (currentReviewToDelete) {
+                    currentReviewToDelete.remove();
+                    alert('Đã xóa đánh giá thành công!');
+                    closeModals();
+                    currentReviewToDelete = null;
+                }
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === viewModal) {
+                    closeModals();
+                }
+                if (e.target === confirmModal) {
+                    closeModals();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
